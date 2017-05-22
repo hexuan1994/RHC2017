@@ -1,0 +1,434 @@
+div.experiment {
+   margin: 30px;
+}
+
+#expr-div {
+	margin: 10px;
+}
+
+.switch-table {
+  margin: 0 auto;
+}
+
+/* 寄存器 */
+#regtable{
+  text-align: center;
+  margin: 0 auto;
+  float: central;
+  overflow-y: auto;
+  height: 450px;
+  width: 20%;
+}
+
+#regtable th{
+  text-align: center;
+}
+
+/* 历史记录 */
+#history-table{
+  margin-top: 20px; 
+  text-align: center;
+  overflow-y: auto;
+  height: 360px;
+}
+
+#upload-form{
+  margin: 0 auto;
+}
+
+#upload-form.div{
+  text-align: auto;
+}
+
+/**/
+#history-table th{
+  text-align: center;
+}
+
+td.decimal {
+  border: 0px; 
+  padding: 30px;
+}
+
+/*#input-box {
+	margin: 50px;
+	height: 70px;
+}
+
+.power-switch-group {
+	margin: 40px;
+}
+
+.power-switch-group .switch-item {
+	margin: 20px;
+}
+*/
+
+/*.switch-table tr {
+	height: 20px;
+	width: 50px;
+}
+*/
+
+td.led {
+	padding: 6px;
+	height: 30px;
+	margin: auto;
+}
+
+/*
+	LED
+*/
+
+.container {
+	background-size: cover;
+  background: rgb(226,226,226); /* Old browsers */
+  background: -moz-linear-gradient(top,  rgba(226,226,226,1) 0%, rgba(219,219,219,1) 50%, rgba(209,209,209,1) 51%, rgba(254,254,254,1) 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(226,226,226,1)), color-stop(50%,rgba(219,219,219,1)), color-stop(51%,rgba(209,209,209,1)), color-stop(100%,rgba(254,254,254,1))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  rgba(226,226,226,1) 0%,rgba(219,219,219,1) 50%,rgba(209,209,209,1) 51%,rgba(254,254,254,1) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  rgba(226,226,226,1) 0%,rgba(219,219,219,1) 50%,rgba(209,209,209,1) 51%,rgba(254,254,254,1) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  rgba(226,226,226,1) 0%,rgba(219,219,219,1) 50%,rgba(209,209,209,1) 51%,rgba(254,254,254,1) 100%); /* IE10+ */
+  background: linear-gradient(to bottom,  rgba(226,226,226,1) 0%,rgba(219,219,219,1) 50%,rgba(209,209,209,1) 51%,rgba(254,254,254,1) 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2e2e2', endColorstr='#fefefe',GradientType=0 ); /* IE6-9 */
+  padding: 20px;
+}
+
+div.led {
+	margin: auto;
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	padding: 3px;
+}
+
+.led-box {
+  height: 30px;
+  width: 25%;
+  margin: 10px 0;
+  float: left;
+}
+
+.led-box p {
+  font-size: 12px;
+  text-align: center;
+  margin: 1em;
+}
+
+.led-black {
+  background-color: #C0C0C0;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #333 0 -1px 9px, #FF0 0 2px 12px;
+}
+
+.led-red {
+	background-color: #F00;
+	box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 12px;
+	/*-webkit-animation: blinkRed 0.5s infinite;
+	-moz-animation: blinkRed 0.5s infinite;
+	-ms-animation: blinkRed 0.5s infinite;
+	-o-animation: blinkRed 0.5s infinite;
+	animation: blinkRed 0.5s infinite;*/
+}
+
+@-webkit-keyframes blinkRed {
+    from { background-color: #F00; }
+    50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+    to { background-color: #F00; }
+}
+@-moz-keyframes blinkRed {
+    from { background-color: #F00; }
+    50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+    to { background-color: #F00; }
+}
+@-ms-keyframes blinkRed {
+    from { background-color: #F00; }
+    50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+    to { background-color: #F00; }
+}
+@-o-keyframes blinkRed {
+    from { background-color: #F00; }
+    50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+    to { background-color: #F00; }
+}
+@keyframes blinkRed {
+    from { background-color: #F00; }
+    50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+    to { background-color: #F00; }
+}
+
+.led-yellow {
+  margin: 0 auto;
+  width: 24px;
+  height: 24px;
+  background-color: #FF0;
+  border-radius: 50%;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #808002 0 -1px 9px, #FF0 0 2px 12px;
+  /*-webkit-animation: blinkYellow 1s infinite;
+  -moz-animation: blinkYellow 1s infinite;
+  -ms-animation: blinkYellow 1s infinite;
+  -o-animation: blinkYellow 1s infinite;
+  animation: blinkYellow 1s infinite;*/
+}
+
+.led-green {
+  margin: 0 auto;
+  width: 24px;
+  height: 24px;
+  background-color: #ABFF00;
+  border-radius: 50%;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #304701 0 -1px 9px, #89FF00 0 2px 12px;
+}
+
+.led-blue {
+  margin: 0 auto;
+  width: 24px;
+  height: 24px;
+  background-color: #24E0FF;
+  border-radius: 50%;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #006 0 -1px 9px, #3F8CFF 0 2px 14px;
+}
+
+
+
+/*-------------------------
+	The Digits
+--------------------------*/
+
+.digits {
+	background-color:#f3f3f3;
+	color:#272e38;
+}
+
+.digits div span{
+	background-color:#272e38;
+	border-color:#272e38;	
+}
+
+.display{
+	background-color:#dddddd;
+	box-shadow:0 1px 1px rgba(0,0,0,0.08) inset, 0 1px 1px #fafafa;
+}
+
+.digits div{
+	text-align:left;
+	position:relative;
+	width: 28px;
+	height:50px;
+	display:inline-block;
+	margin:0 4px;
+}
+
+
+.digits div span{
+	opacity: 0;
+	position:absolute;
+
+	-webkit-transition:0.25s;
+	-moz-transition:0.25s;
+	transition:0.25s;
+}
+
+.digits div span.turnon{
+  opacity: 1;
+}
+
+.digits div span.turnoff{
+  opacity: 0;
+}
+
+.digits div span:before,
+.digits div span:after{
+	content:'';
+	position:absolute;
+	width:0;
+	height:0;
+	border:5px solid transparent;
+}
+
+
+.digits .d1{			height:5px;width:16px;top:0;left:6px;}
+.digits .d1:before{	border-width:0 5px 5px 0;border-right-color:inherit;left:-5px;}
+.digits .d1:after{	border-width:0 0 5px 5px;border-left-color:inherit;right:-5px;}
+
+.digits .d7{			height:5px;width:16px;top:24px;left:6px;}
+.digits .d7:before{	border-width:3px 4px 2px;border-right-color:inherit;left:-8px;}
+.digits .d7:after{	border-width:3px 4px 2px;border-left-color:inherit;right:-8px;}
+
+.digits .d4{			height:5px;width:16px;top:48px;left:6px;}
+.digits .d4:before{	border-width:5px 5px 0 0;border-right-color:inherit;left:-5px;}
+.digits .d4:after{	border-width:5px 0 0 5px;border-left-color:inherit;right:-5px;}
+
+.digits .d6{			width:5px;height:14px;top:7px;left:0;}
+.digits .d6:before{	border-width:0 5px 5px 0;border-bottom-color:inherit;top:-5px;}
+.digits .d6:after{	border-width:0 0 5px 5px;border-left-color:inherit;bottom:-5px;}
+
+.digits .d2{			width:5px;height:14px;top:7px;right:0;}
+.digits .d2:before{	border-width:0 0 5px 5px;border-bottom-color:inherit;top:-5px;}
+.digits .d2:after{	border-width:5px 0 0 5px;border-top-color:inherit;bottom:-5px;}
+
+.digits .d5{			width:5px;height:14px;top:32px;left:0;}
+.digits .d5:before{	border-width:0 5px 5px 0;border-bottom-color:inherit;top:-5px;}
+.digits .d5:after{	border-width:0 0 5px 5px;border-left-color:inherit;bottom:-5px;}
+
+.digits .d3{			width:5px;height:14px;top:32px;right:0;}
+.digits .d3:before{	border-width:0 0 5px 5px;border-bottom-color:inherit;top:-5px;}
+.digits .d3:after{	border-width:5px 0 0 5px;border-top-color:inherit;bottom:-5px;}
+
+
+/* 0 */
+
+.digits div.zero .d1,
+.digits div.zero .d3,
+.digits div.zero .d4,
+.digits div.zero .d5,
+.digits div.zero .d6,
+.digits div.zero .d7{
+	opacity:1;
+}
+
+/* 1 */
+
+.digits div.one .d5,
+.digits div.one .d7{
+	opacity:1;
+}
+
+/* 2 */
+
+.digits div.two .d1,
+.digits div.two .d5,
+.digits div.two .d2,
+.digits div.two .d6,
+.digits div.two .d3{
+	opacity:1;
+}
+
+/* 3 */
+
+.digits div.three .d1,
+.digits div.three .d5,
+.digits div.three .d2,
+.digits div.three .d7,
+.digits div.three .d3{
+	opacity:1;
+}
+
+/* 4 */
+
+.digits div.four .d5,
+.digits div.four .d2,
+.digits div.four .d4,
+.digits div.four .d7{
+	opacity:1;
+}
+
+/* 5 */
+
+.digits div.five .d1,
+.digits div.five .d2,
+.digits div.five .d4,
+.digits div.five .d3,
+.digits div.five .d7{
+	opacity:1;
+}
+
+/* 6 */
+
+.digits div.six .d1,
+.digits div.six .d2,
+.digits div.six .d4,
+.digits div.six .d3,
+.digits div.six .d6,
+.digits div.six .d7{
+	opacity:1;
+}
+
+
+/* 7 */
+
+.digits div.seven .d1,
+.digits div.seven .d5,
+.digits div.seven .d7{
+	opacity:1;
+}
+
+/* 8 */
+
+.digits div.eight .d1,
+.digits div.eight .d2,
+.digits div.eight .d3,
+.digits div.eight .d4,
+.digits div.eight .d5,
+.digits div.eight .d6,
+.digits div.eight .d7{
+	opacity:1;
+}
+
+/* 9 */
+
+.digits div.nine .d1,
+.digits div.nine .d2,
+.digits div.nine .d3,
+.digits div.nine .d4,
+.digits div.nine .d5,
+.digits div.nine .d7{
+	opacity:1;
+}
+
+/* A */
+
+.digits div.ten .d1,
+.digits div.ten .d2,
+.digits div.ten .d4,
+.digits div.ten .d5,
+.digits div.ten .d6,
+.digits div.ten .d7{
+	opacity:1;
+}
+
+/* B */
+
+.digits div.eleven .d2,
+.digits div.eleven .d3,
+.digits div.eleven .d4,
+.digits div.eleven .d6,
+.digits div.eleven .d7{
+	opacity:1;
+}
+
+/* C */
+
+.digits div.twelve .d1,
+.digits div.twelve .d3,
+.digits div.twelve .d4,
+.digits div.twelve .d6{
+	opacity:1;
+}
+
+/* D */
+
+.digits div.thirteen .d2,
+.digits div.thirteen .d3,
+.digits div.thirteen .d5,
+.digits div.thirteen .d6,
+.digits div.thirteen .d7{
+	opacity:1;
+}
+
+/* E */
+
+.digits div.fourteen .d1,
+.digits div.fourteen .d2,
+.digits div.fourteen .d3,
+.digits div.fourteen .d4,
+.digits div.fourteen .d6{
+	opacity:1;
+}
+
+/* F */
+
+.digits div.fifteen .d1,
+.digits div.fifteen .d2,
+.digits div.fifteen .d4,
+.digits div.fifteen .d6{
+	opacity:1;
+}

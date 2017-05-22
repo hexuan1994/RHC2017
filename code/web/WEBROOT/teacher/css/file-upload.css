@@ -1,0 +1,33 @@
+/* upload file */
+.upload-file {
+    width: 100%;
+    margin: 40px;
+    padding: 10px 10px;
+    height: 120px;
+    line-height: 20px;
+    cursor: pointer;
+    color: #888;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    display: inline-block;
+    *display: inline;
+    *zoom: 1
+}
+
+.upload-file-  input {
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    cursor: pointer
+}
+
+.upload-file-:hover {
+    color: #444;
+    background: #eee;
+    border-color: #ccc;
+    /*text-decoration: none*/
+}

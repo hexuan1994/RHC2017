@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>console</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="keywords" content="console">
+    <meta name="description" content="管理员帐户">
+    <link rel="icon" href="../img/icon/website.ico">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../css/custom.min.css"> -->
+    <link rel="stylesheet" type="text/css" href="../css/dashboard.css">
+</head>
+
+<body>       
+    <!-- 网页上方导航栏 -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="">管理员</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <!-- <li><a href="">我的资料</a></li> -->
+                    <!-- <li><a href="">修改密码</a></li> -->
+                    <!-- <li><a href="">退出</a></li> -->
+                    <li><a href="../login.html">退出</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!--  -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3 col-md-2 sidebar">
+                <ul class="nav nav-sidebar">
+                    <!-- <li><a href="./console.html">课程</a></li> -->
+                    <li class="active"><a href="./new-course.html">新建课程</a></li>
+                    <li><a href="./console.html">所有课程</a></li>
+                </ul>
+                <ul class="nav nav-sidebar">
+                    <!-- <li><a href="./teacher.html">教师</a></li> -->
+                    <li><a href="./new-teacher.html">新建教师</a></li>
+                    <li><a href="./teacher.html">所有教师</a></li>
+                </ul>
+                <ul class="nav nav-sidebar">
+                    <li><a href="./device.html">设备</a></li>
+                    <!-- <li><a href="">控制FPGA到FLASH</a></li> -->
+                </ul>
+            </div>
+
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                <h1 class="page-header">新建课程</h1>
+                <div id="add_course" class="add_course">
+                    <form>
+                        <div class="form-group row">
+                            <label for="input_code" class="col-sm-2 col-form-label">编号</label>
+                            <div class="col-sm-3">
+                                <input type="text" name="Code" id="input_code" class="form-control" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" placeholder="请输入数字！">
+                            </div>
+                        </div>
+                    </form>
+                    <form>
+                        <div class="form-group row">
+                            <label for="input_name" class="col-sm-2 col-form-label">课程名</label>
+                            <div class="col-sm-3">
+                                <input type="text" name="Code" id="input_name" class="form-control" value="" placeholder="请输入课程名！" onkeyup="value=value.replace(/[\d]/g,'') "onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[\d]/g,''))" maxlength=12 name="Numbers">
+                            </div>
+                        </div>
+                    </form>
+                    <form>
+                        <div class="form-group row">
+                            <label for="input_name" class="col-sm-2 col-form-label">课程类型</label>
+                            <div class="col-sm-3">
+                                <select class="form-control" id="input_type">
+                                    <option>数字逻辑</option>
+                                    <option>计算机原理</option>
+                                    <option>计算机设计</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                    <form>
+                        <div class="form-group row">
+                            <label for="input_year" class="col-md-2 col-form-label">时间</label>
+                            <div class="col-sm-3">
+                                <select class="form-control" id="input_year">
+                                    <option>2016</option>
+                                    <option>2017</option>
+                                    <option>2018</option>
+                                    <option>2019</option>
+                                    <option>2020</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                    <form>
+                        <div class="form-group row">
+                            <label for="input_season" class="col-md-2 col-form-label">季节</label>
+                            <div class="col-sm-3">
+                                <select class="form-control" id="input_season">
+                                    <option>春</option>
+                                    <option>夏</option>
+                                    <option>秋</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="form-group row">
+                        <button id="verify" type="submit" class="btn btn-success">确认</button>
+                        <button id="cancle" type="submit" class="btn btn-primary">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>         
+    </div>
+
+    <!-- script -->
+    <script type="text/javascript" src="../js/jquery.min.js"/></script>
+    <script type="text/javascript" src="../js/bootstrap.js"/></script>
+    <script type="text/javascript" src="./js/addCourse.js"/></script>
+</body>
+
+</html>

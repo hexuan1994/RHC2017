@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>计数器实验</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="keywords" content="console">
+    <meta name="description" content="数字逻辑计数器实验">
+    <link rel="icon" href="../img/icon/counter.ico">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dashboard.css">
+    <link rel="stylesheet" type="text/css" href="./css/highlight.css"">
+    <link rel="stylesheet" type="text/css" href="./css/bootstrap-switch.css">
+    <link rel="stylesheet" type="text/css" href="./css/docs.min.css">
+    <link rel="stylesheet" type="text/css" href="./css/control.css">
+    <link rel="stylesheet" type="text/css" href="./css/file_upload.css">
+    <link rel="stylesheet" type="text/css" href="./css/experiment.css">
+</head>
+
+<body id="Counter">
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <!-- 网页上方导航栏 -->
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="../student/console.html">Console</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="../student/console.html">课程</a></li>
+                    <li><a href="../student/experiment.html">实验</a></li>
+                    <li><a href="../student/settings.html">账户</a></li>
+                    <li><a href="../login.html">退出</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 网页主体部分 -->
+    <div class="container-fluid row experiment">
+    	<div class="col-md-3">
+            <!-- 提交文件组件 -->
+            <div id="add_student" class="add_student">
+                <form id="upload-form" style="margin: 0 auto;">
+                    <div class="input-group-xs row" style="text-align: auto">
+                        <span id="connect-device" class="input-group-addon">连接设备</span>
+                        <input class="form-control" type="file" id="upload-file" name="upload-file">
+                        <span class="input-group-addon" id="upload-btn" name="upload-btn">提交</span>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 查看历史记录 -->
+            <div id="history-table">
+                <table class="table table-responsive">
+                    <thead>
+                        <tr>
+                            <th colspan="3">
+                                提交历史记录
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>编号</th>
+                            <th>提交时间</th>
+                            <th>重新提交</th>
+                        </tr>  
+                    </thead>
+                    <tbody id="history">
+                        
+                    </tbody>
+                </table>
+            </div>
+    	</div>
+
+        <!-- 实验主体部分 -->
+    	<div class="col-md-6" id="expr-div">
+    		<table class="switch-table" cellspacing="0" cellpadding="0" style="border: 0px; margin: 0, auto;">
+                <tr>
+                    <td style="border: 0px;">
+                        <button id="reset" class="btn">reset</button>
+                        <!-- <input class="switch-item" type="checkbox" name="switch0" checked data-inverse="true"/> -->
+                    </td>
+                    <td rowspan="4" style="border: 0px;"><img src="./img/counter.jpg"></td>
+                    <td colspan="1" rowspan="4" style="border: 0px;">
+                        <div class="digits">
+                            <div id="digital-two">
+                                <span id="digit-7" class="d1 turnon"></span>
+                                <span id="digit-8" class="d2 turnon"></span>
+                                <span id="digit-9" class="d3 turnon"></span>
+                                <span id="digit-10" class="d4 turnon"></span>
+                                <span id="digit-11" class="d5 turnon"></span>
+                                <span id="digit-12" class="d6 turnon"></span>
+                                <span id="digit-13" class="d7 turnon"></span>
+                            </div>
+                            <div id="digital-one">
+                                <span id="digit-0" class="d1 turnon"></span>
+                                <span id="digit-1" class="d2 turnon"></span>
+                                <span id="digit-2" class="d3 turnon"></span>
+                                <span id="digit-3" class="d4 turnon"></span>
+                                <span id="digit-4" class="d5 turnon"></span>
+                                <span id="digit-5" class="d6 turnon"></span>
+                                <span id="digit-6" class="d7 turnon"></span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border: 0px;">
+                        <button id="clock" class="btn">clock</button>
+                        <!-- <input class="switch-item" type="checkbox" name="switch1" checked data-inverse="true" /> -->
+                    </td>
+                    
+                </tr>
+                <!-- <tr>
+                    <td style="border: 0px;">
+                        <input class="switch-item" type="checkbox" name="switch2" checked data-inverse="true" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border: 0px;">
+                        <input class="switch-item" type="checkbox" name="switch3" checked data-inverse="true" />
+                    </td>
+                </tr> -->
+    		</table>
+	    </div>
+
+        <!-- 寄存器部分 -->
+        <div id="regtable" class="col-md-offset-1 col-md-1">
+            <!-- <h3>寄存器值</h3> -->
+            <table class="table table-responsive">
+                <thead>
+                    <th>寄存器编号</th>
+                    <th>寄存器值</th>
+                </thead>
+                <tbody id="regs">
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="./js/jquery.min.js"></script>
+    <script type="text/javascript" src="./js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./js/highlight.js"></script>
+    <script type="text/javascript" src="./js/bootstrap-switch.js"></script>
+    <script type="text/javascript" src="./js/upload.js"></script>
+    <script type="text/javascript" src="./js/regesiter.js"></script>
+    <script type="text/javascript" src="./js/initCheckbox.js"></script>
+    <script type="text/javascript" src="./js/connectDevice.js"></script>
+    <script type="text/javascript" src="./js/clickButton.js"></script>
+    <script type="text/javascript" src="./js/getHistory.js"></script>
+</body>
+</html>

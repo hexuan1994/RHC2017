@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>console</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="keywords" content="console">
+    <meta name="description" content="管理员帐户">
+    <link rel="icon" href="../img/icon/website.ico">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../css/custom.min.css"> -->
+    <link rel="stylesheet" type="text/css" href="../css/dashboard.css">
+</head>
+
+<body id="new-student">       
+    <!-- 网页上方导航栏 -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="./console.html">欢迎老师登录！</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="./console.html">选择课程</a></li>
+                    <li><a href="./studentList.html">学生名单</a></li>
+                    <li><a href="../login.html">退出</a></li>
+                    <!-- <li><a href="./settings.html">我的资料</a></li> -->
+                    <!-- <li><a href="./password.html">修改密码</a></li> -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 网页左侧工具栏与右侧功能区 -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3 col-md-2 sidebar">
+                <ul class="nav nav-sidebar">
+                    <li><a href="./studentList.html">学生名单</a></li>
+                    <li class="active"><a href="./addStudent.html">添加学生</a></li>
+                    <li><a href="./batchImport.html">批量导入</a></li>
+                </ul>
+                <!-- <ul class="nav nav-sidebar">
+                    <li><a href="">学生页面</a></li>
+                </ul> -->
+            </div>
+
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                <h1 class="page-header">添加学生</h1>
+                <div id="add_course" class="add_course">
+                    <form>
+                        <div class="form-group row">
+                            <label for="input_name" class="col-sm-2 col-form-label">学号</label>
+                            <div class="col-sm-3">
+                                <input type="text" name="ID" id="input_id" class="form-control" maxlength="10" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" placeholder="请输入学号">
+                            </div>
+                        </div>
+                    </form>
+                    <form>
+                        <div class="form-group row">
+                            <label for="input_name" class="col-sm-2 col-form-label">姓名</label>
+                            <div class="col-sm-3">
+                                <input type="text" name="name" id="input_name" class="form-control">
+                            </div>
+                        </div>
+                    </form>
+                    <form>
+                        <div class="form-group row">
+                            <label for="input_course" class="col-sm-2 col-form-label">院系</label>
+                            <div class="col-sm-3">
+                                <select class="form-control" id="input_department">
+                                    <option>计算机系</option>
+                                    <option>电子系</option>
+                                    <option>软件学院</option>
+                                    <option>自动化系</option>
+                                    <option>交叉信息学院</option>
+                                    <option>建筑学院</option>
+                                    <option>建筑系</option>
+                                    <option>土木系</option>
+                                    <option>水利系</option>
+                                    <option>环境学院</option>
+                                    <option>机械系</option>
+                                    <option>精仪系</option>
+                                    <option>热能系</option>
+                                    <option>汽车系</option>
+                                    <option>工业工程</option>
+                                    <option>电机系</option>
+                                    <option>航院</option>
+                                    <option>工物系</option>
+                                    <option>化工系</option>
+                                    <option>材料学院</option>
+                                    <option>数学系</option>
+                                    <option>物理系</option>
+                                    <option>化学系</option>
+                                    <option>生命学院</option>
+                                    <option>地球科学中心</option>
+                                    <option>交叉信息院</option>
+                                    <option>经管学院</option>
+                                    <option>公管学院</option>
+                                    <option>金融学院</option>
+                                    <option>中文系</option>
+                                    <option>外文系</option>
+                                    <option>法学院</option>
+                                    <option>新闻学院</option>
+                                    <option>马克思主义学院</option>
+                                    <option>人文学院</option>
+                                    <option>社科学院</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                    <form>
+                        <div class="form-group row">
+                            <label for="input_name" class="col-sm-2 col-form-label">班级</label>
+                            <div class="col-sm-3">
+                                <input type="text" name="class" id="input_class" class="form-control">
+                            </div>
+                        </div>
+                    </form>
+                    <form>
+                        <div class="form-group row">
+                            <label for="input_name" class="col-sm-2 col-form-label">邮箱</label>
+                            <div class="col-sm-3">
+                                <input type="text" name="Email" id="input_email" class="form-control">
+                            </div>
+                        </div>
+                    </form>
+                    <form>
+                        <div class="form-group row">
+                            <label for="input_name" class="col-sm-2 col-form-label">电话</label>
+                            <div class="col-sm-3">
+                                <input type="text" name="phone" id="input_phone" class="form-control" maxlength="13" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" placeholder="请输入手机">
+                            </div>
+                        </div>
+                    </form>
+                    <div class="form-group row center-block">
+                        <button id="verify" type="submit" class="btn btn-success">确认</button>
+                        <button id="cancle" type="submit" class="btn btn-primary">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>         
+    </div>
+
+    <!-- script -->
+    <script type="text/javascript" src="../js/jquery.min.js"/></script>
+    <script type="text/javascript" src="../js/bootstrap.js"/></script>
+    <script type="text/javascript" src="./js/addStudent.js"/></script>
+</body>
+
+</html>
