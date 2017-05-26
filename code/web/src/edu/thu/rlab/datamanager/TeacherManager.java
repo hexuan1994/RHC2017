@@ -3,7 +3,6 @@ package edu.thu.rlab.datamanager;
 import edu.thu.rlab.database.CourseInfo;
 import edu.thu.rlab.database.DataBase;
 import edu.thu.rlab.database.UserInfo;
-import java.io.PrintStream;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,7 +21,7 @@ public class TeacherManager
     JSONObject json = new JSONObject();
     json.put("dataType", "teacherGetCourse");
 
-    List allCourse = this.db.getAllCourseInfo(0);
+    List<CourseInfo> allCourse = this.db.getAllCourseInfo(0);
     JSONArray jsonArray = new JSONArray();
     for (CourseInfo course : allCourse) {
       if (teacherID.equals(course.getProfessor())) {
@@ -45,11 +44,11 @@ public class TeacherManager
     json.put("dataType", "importExcel");
     ExcelReader excelReader = new ExcelReader(excelPath);
     System.out.print("read xls ok");
-    List content = excelReader.readExcelSheet(0);
+    List< List<String> > content = excelReader.readExcelSheet(0);
     int succeedNum = 0;
     int failNum = 0;
     if (!content.isEmpty()) {
-      for (List line : content)
+      for (List<String> line : content)
       {
         UserInfo student = new UserInfo();
         student.setUser((String)line.get(0));
@@ -125,7 +124,7 @@ public class TeacherManager
     JSONObject json = new JSONObject();
     json.put("dataType", "allStudent");
 
-    List students = this.db.getStudentsInCourse(courseID);
+    List<String> students = this.db.getStudentsInCourse(courseID);
     JSONArray jsonArray = new JSONArray();
     for (String studentUser : students) {
       UserInfo student = this.db.getUserInfo(studentUser);

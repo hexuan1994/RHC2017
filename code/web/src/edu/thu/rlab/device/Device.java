@@ -1,6 +1,5 @@
 package edu.thu.rlab.device;
 
-import java.io.PrintStream;
 
 public class Device
   implements Runnable
@@ -9,7 +8,6 @@ public class Device
   private String id;
   private String ip;
   private int tcpPort;
-  private int usbPort;
   private String location;
   private long lastHeartBeatTime;
   public int timeoutCount;
@@ -17,14 +15,12 @@ public class Device
   private String userId;
   private long lastOpertaionTime;
   private long startUseTime;
-  private byte[] buf = new byte[1024];
 
   public Device(String id, String ip, int tcpPort, int usbPort, STATE state, DeviceDAO deviceDAO)
   {
     this.id = id;
     this.ip = ip;
     this.tcpPort = tcpPort;
-    this.usbPort = usbPort;
     this.state = state;
     this.lastHeartBeatTime = System.currentTimeMillis();
     this.timeoutCount = 0;

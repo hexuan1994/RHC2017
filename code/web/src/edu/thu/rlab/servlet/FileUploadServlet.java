@@ -3,9 +3,7 @@ package edu.thu.rlab.servlet;
 import edu.thu.rlab.datamanager.DataManager;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.net.URL;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -21,7 +19,8 @@ public class FileUploadServlet extends HttpServlet
 {
   private static final long serialVersionUID = 1L;
   private String filePath;
-
+  private int startAddr = 0;
+  
   public FileUploadServlet()
   {
     File curFile = new File(FileUploadServlet.class.getResource("/").getFile().toString());
@@ -46,6 +45,7 @@ public class FileUploadServlet extends HttpServlet
 
     String courseID = "";
     String exprID = "";
+    
 
     Cookie[] allCookie = request.getCookies();
     for (Cookie c : allCookie) {
@@ -72,9 +72,16 @@ public class FileUploadServlet extends HttpServlet
       diskFactory.setRepository(new File(this.filePath));
       ServletFileUpload upload = new ServletFileUpload(diskFactory);
       upload.setSizeMax(20971520L);
-      List list = upload.parseRequest(request);
-
+      List<FileItem> list = upload.parseRequest(request);
       for (FileItem item : list) {
+    	  if( item.isFormField()){
+    		  String name = item.getFieldName();
+    		  if (name.equals("startAddr")){
+    			  String value = item.getString();
+    			  this.startAddr = Integer.parseInt(value);
+    			  System.out.println(startAddr);
+    		  }
+    	  } else {
         String filename = item.getName();
         if (filename == null) {
           out.print("{'result':'failed'}");
@@ -82,12 +89,13 @@ public class FileUploadServlet extends HttpServlet
           out.close();
           return;
         }
-        System.out.println(filename);
+        System.out.println("FileName: " + filename);
 
         String curFilePath = this.filePath + item.getName();
         File uploadFile = new File(curFilePath);
         item.write(uploadFile);
-
+    	 
+      
         String outStr = "";
 
         if ((userType.equals("student")) && (filename.endsWith(".rbf"))) {
@@ -108,12 +116,23 @@ public class FileUploadServlet extends HttpServlet
 
           DataManager dataManager = new DataManager();
           outStr = dataManager.TeacherEvent(fileJson.toString());
+        } else if((userType.equals("student")) && (filename.endsWith(".bin"))) {
+        	JSONObject fileJson = new JSONObject();
+        	fileJson.put("dataType", "studentUploadBin");
+        	fileJson.put("studentID", userID);
+        	fileJson.put("courseID", courseID);
+        	fileJson.put("startAddr", this.startAddr);
+        	fileJson.put("binPath", curFilePath);
+        	
+        	DataManager dataManager  = new DataManager();
+        	outStr = dataManager.StudentEvent(fileJson.toString());
         } else {
           outStr = "{'result':'failed', 'resultInfo':'文件类型错误'}";
         }
         out.print(outStr);
         out.flush();
         out.close();
+    	  }
       }
     } catch (Exception e) {
       System.out.println("使用 fileupload 包时发生异常 ...");

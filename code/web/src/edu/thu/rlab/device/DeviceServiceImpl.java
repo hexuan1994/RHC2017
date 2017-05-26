@@ -1,11 +1,12 @@
 package edu.thu.rlab.device;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,6 +16,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -25,7 +27,7 @@ public class DeviceServiceImpl extends TimerTask
   private long deleteTimeoutUserPeriod;
   private Timer timer;
   private DeviceDAO deviceDAO;
-  private Map<String, Device> userDeviceMap = new HashMap();
+  private Map<String, Device> userDeviceMap = new HashMap<String, Device>();
   private byte[] lock = new byte[0];
 
   public void init(String path)
@@ -76,12 +78,13 @@ public class DeviceServiceImpl extends TimerTask
 
   public int connect(String user)
   {
+	  Device device;
     synchronized (this.lock) {
       if (this.userDeviceMap.containsKey(user)) {
         return 0;
       }
 
-      Device device = this.deviceDAO.allocate(user);
+      device = this.deviceDAO.allocate(user);
       if (device == null) {
         System.out.println(user + ":No Available Device");
         return 1;
@@ -89,11 +92,12 @@ public class DeviceServiceImpl extends TimerTask
 
       DeviceCmd cmd = new DeviceCmd(device);
       int ret = cmd.userInit();
+      if( ret == -1)
+    	  System.out.println(user + " cmd init failed.");
 
       this.userDeviceMap.put(user, device);
       System.out.println(user + " connected to device:" + device.getId());
     }
-    Device device;
     return 0;
   }
 
@@ -105,7 +109,7 @@ public class DeviceServiceImpl extends TimerTask
     synchronized (this.lock) {
       device = (Device)this.userDeviceMap.remove(user);
     }
-    Device device;
+   
     this.deviceDAO.free(device);
   }
 
@@ -128,38 +132,23 @@ public class DeviceServiceImpl extends TimerTask
 
   public byte[] getResult(String userId, String type)
   {
-    String str;
-    switch ((str = type).hashCode()) { case -1672483364:
-      if (str.equals("Counter"));
-      break;
-    case -1088050383:
-      if (str.equals("Decimal"));
-      break;
-    case -1087880156:
-      if (str.equals("Decoder"));
-      break;
-    case 63107310:
-      if (str.equals("Adder")) break; break;
-    case 80204913:
-      if (str.equals("State"));
-      break;
-    case 1314210581:
-      if (!str.equals("MultiPlexer")) { break label178;
+		switch (type) {
+		case "Adder":
+			return getAdderResult(userId);
+		case "Decoder":
+			return getDecoderResult(userId);
+		case "MultiPlexer":
+			return getPlexerResult(userId);
+		case "Decimal":
+			return getDecimalResult(userId);
+		case "Counter":
+			return getCounterResult(userId);
+		case "State":
+			return getStateResult(userId);
 
-        return getAdderResult(userId);
-
-        return getDecoderResult(userId);
-      } else {
-        return getPlexerResult(userId);
-
-        return getDecimalResult(userId);
-
-        return getCounterResult(userId);
-
-        return getStateResult(userId);
-      }
-      break; }
-    label178: return null;
+		default:
+			return null;
+		}
   }
 
   private int sendRbf(String userId, InputStream rbf, ExperimentType type)
@@ -187,6 +176,55 @@ public class DeviceServiceImpl extends TimerTask
     return 0;
   }
 
+  
+  public int sendBin(String userId, int startAddr, InputStream bin)
+  {
+	    Device device = null;
+	    synchronized (this.lock) {
+	      device = (Device)this.userDeviceMap.get(userId);
+	    }
+
+	    if (device == null) {
+	      return 2;
+	    }
+	    
+	    try
+	    {
+	    int len = bin.available();
+	    int endAddr = startAddr + len/4 - 1;
+	    if( endAddr > 1048575)
+	    {
+	    	System.out.println("上传bin文件大小超过可写范围");
+	    	return 4;
+	    }
+/*	该部分内容直接读取了InputStream bin,这会对其中的内容进行改变，影响接下来的读取。    
+	    //Check file
+	    ByteArrayOutputStream swapStream = new ByteArrayOutputStream();  
+        byte[] buff = new byte[100];  
+        int rc = 0;  
+        while ((rc = bin.read(buff, 0, 100)) > 0) {  
+            swapStream.write(buff, 0, rc);  
+        }  
+        byte[] res = swapStream.toByteArray();
+        for (int i = 0; i < res.length; i++)
+            System.out.printf("%d%d%d%d%d%d%d%d\n", new Object[] { Integer.valueOf(res[i] >> 7 & 0x1), Integer.valueOf(res[i] >> 6 & 0x1), Integer.valueOf(res[i] >> 5 & 0x1), Integer.valueOf(res[i] >> 4 & 0x1), Integer.valueOf(res[i] >> 3 & 0x1), Integer.valueOf(res[i] >> 2 & 0x1), Integer.valueOf(res[i] >> 1 & 0x1), Integer.valueOf(res[i] & 0x1) });
+ */     
+	    
+	    DeviceCmd cmd = new DeviceCmd(device);
+	    cmd.setType(7);
+	    System.out.println("Bin: len=" + len + " startAddr=" + startAddr + "endAddr=" + endAddr + " size=" + bin.available());
+	      int ret = cmd.writeRam(bin, len, startAddr, endAddr);
+	      System.out.println("Bin: Ret = " + ret);
+	      if (ret != 0)
+	        return 3;
+	    }
+	    catch (IOException e) {
+	      return 3;
+	    }
+
+	    return 0;
+  }
+  
   private boolean setInput(String userId, byte[] input, ExperimentType type)
   {
     Device device = null;
@@ -233,11 +271,8 @@ public class DeviceServiceImpl extends TimerTask
 
     if (data == null) {
       res = cmd.readRam((endAddr - startAddr + 1) * 4, startAddr, endAddr);
-      if (res != null) {
+      if (res != null) 
         System.out.printf("res.length = %d\n", new Object[] { Integer.valueOf(res.length) });
-        for (int i = 0; i < res.length; i++)
-          System.out.printf("%d%d%d%d%d%d%d%d", new Object[] { Integer.valueOf(res[i] >> 7 & 0x1), Integer.valueOf(res[i] >> 6 & 0x1), Integer.valueOf(res[i] >> 5 & 0x1), Integer.valueOf(res[i] >> 4 & 0x1), Integer.valueOf(res[i] >> 3 & 0x1), Integer.valueOf(res[i] >> 2 & 0x1), Integer.valueOf(res[i] >> 1 & 0x1), Integer.valueOf(res[i] & 0x1) });
-      }
     }
     else {
       InputStream is = new ByteArrayInputStream(data);
@@ -304,21 +339,21 @@ public class DeviceServiceImpl extends TimerTask
   {
     synchronized (this.lock)
     {
-      Collection devices = this.userDeviceMap.values();
-      Iterator it = devices.iterator();
-      Set toDelete = new HashSet(0);
+      Collection<Device> devices = this.userDeviceMap.values();
+      Iterator<Device> it = devices.iterator();
+      Set<String> toDelete = new HashSet<String>(0);
       while (it.hasNext()) {
         Device device = (Device)it.next();
-        long l1 = System.currentTimeMillis();
         if (System.currentTimeMillis() - device.getLastOpertaionTime() > this.userTimeoutTime) {
           String user = device.getUser();
           toDelete.add(user);
         }
       }
-
-      it = toDelete.iterator();
-      while (it.hasNext()) {
-        String user = (String)it.next();
+      
+      Iterator<String> it2;
+      it2 = toDelete.iterator();
+      while (it2.hasNext()) {
+        String user = (String)it2.next();
         Device device = (Device)this.userDeviceMap.remove(user);
         this.deviceDAO.free(device);
       }
@@ -327,37 +362,24 @@ public class DeviceServiceImpl extends TimerTask
 
   ExperimentType stringToType(String type)
   {
-    String str;
-    switch ((str = type).hashCode()) { case -1672483364:
-      if (str.equals("Counter"));
-      break;
-    case -1088050383:
-      if (str.equals("Decimal"));
-      break;
-    case -1087880156:
-      if (str.equals("Decoder"));
-      break;
-    case 63107310:
-      if (str.equals("Adder")) break; break;
-    case 80204913:
-      if (str.equals("State"));
-      break;
-    case 1314210581:
-      if (!str.equals("MultiPlexer")) { break label166;
-
-        return ExperimentType.Adder;
-
-        return ExperimentType.Decoder;
-      } else {
-        return ExperimentType.Multiplexer;
-
-        return ExperimentType.Decimal;
-
-        return ExperimentType.Counter;
-
-        return ExperimentType.State;
-      }break; }
-    label166: return ExperimentType.Error;
+		switch(type){
+		case "Adder":
+			return ExperimentType.Adder;
+		case "Decoder":
+			return ExperimentType.Decoder;
+		case "MultiPlexer":
+			return ExperimentType.Multiplexer;
+		case "Decimal":
+			return ExperimentType.Decimal;
+		case "Counter":
+			return ExperimentType.Counter;
+		case "State":
+			return ExperimentType.State;
+		case "Sram" :
+			return ExperimentType.State;
+		default:
+			return ExperimentType.Error;
+	}
   }
 
   public void setUserTimeoutTime(long userTimeoutTime)
@@ -375,7 +397,7 @@ public class DeviceServiceImpl extends TimerTask
 
   public static enum ExperimentType
   {
-    Error(0), Adder(1), Decoder(2), Multiplexer(3), Decimal(4), Counter(5), State(6);
+    Error(0), Adder(1), Decoder(2), Multiplexer(3), Decimal(4), Counter(5), State(6),Sram(7);
 
     int code;
 

@@ -2,14 +2,12 @@ package edu.thu.rlab.device;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class DeviceServer extends Thread
 {
-  private static final int MaxDeviceCount = 1024;
   private int serverPort;
   private DeviceDAO deviceDAO;
 
@@ -51,13 +49,14 @@ public class DeviceServer extends Thread
     }
     while (true)
     {
+    int deviceCount = 0;
       try {
         client = server.accept();
 
         clientIP = client.getInetAddress();
         BufferedInputStream in = new BufferedInputStream(client
           .getInputStream());
-        int deviceCount = in.read(deviceBuffer);
+        deviceCount = in.read(deviceBuffer);
 
         client.close();
         client = null;
@@ -74,8 +73,8 @@ public class DeviceServer extends Thread
 
         System.out.println("Read client stream error!");
         e.printStackTrace();
-      }continue;
-      int deviceCount;
+      }
+     
       this.deviceDAO.updateDevicePool(clientIP.getHostAddress(), deviceBuffer, 
         deviceCount);
     }

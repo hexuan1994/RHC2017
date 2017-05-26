@@ -20,14 +20,14 @@ int InitializeAhb()
 /* 逆初始化，关闭总线访问 */
 void UninitializeAhb()
 {
-	close(fd);
+	close(ahb);
 }
 
 /* 读取总线数据 */
 static int ReadAhb(UINT32 offset, UINT16 &data)
 {
 	int rc;
-	rc = pread(fd,&data,2,offset);
+	rc = pread(ahb,&data,2,offset);
 	if (rc<0)
 	{
 		printf("read error!!\n");
@@ -40,7 +40,7 @@ static int ReadAhb(UINT32 offset, UINT16 &data)
 static int WriteAhb(UINT32 offset, UINT16 data)
 {
 	int rc;
-	rc = pwrite(fd,&data,2,offset);
+	rc = pwrite(ahb,&data,2,offset);
 	if(rc<0)
 	{
 		printf("write error !!\n");

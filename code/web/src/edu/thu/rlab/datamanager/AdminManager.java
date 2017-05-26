@@ -113,7 +113,7 @@ public class AdminManager
     JSONObject json = new JSONObject();
     json.put("dataType", "allTeacher");
 
-    List allUser = this.db.getAllUserInfo(0);
+    List<UserInfo> allUser = this.db.getAllUserInfo(0);
     JSONArray jsonArray = new JSONArray();
     for (UserInfo user : allUser) {
       if (user.getPermission() == 1) {
@@ -122,7 +122,7 @@ public class AdminManager
         json2.put("name", user.getName());
         json2.put("mail", user.getEmail());
         json2.put("tel", user.getTel());
-        List courseList = this.db.getCourseByProfessorID(user.getUser());
+        List<CourseInfo> courseList = this.db.getCourseByProfessorID(user.getUser());
         JSONArray jsonArray2 = new JSONArray();
         for (CourseInfo course : courseList) {
           JSONObject json3 = new JSONObject();
@@ -143,7 +143,7 @@ public class AdminManager
     JSONObject json = new JSONObject();
     json.put("dataType", "allCourse");
 
-    List allCourse = this.db.getAllCourseInfo(0);
+    List<CourseInfo> allCourse = this.db.getAllCourseInfo(0);
     JSONArray jsonArray = new JSONArray();
     for (CourseInfo course : allCourse) {
       JSONObject json2 = new JSONObject();
@@ -164,7 +164,7 @@ public class AdminManager
     JSONObject json = new JSONObject();
     json.put("dataType", "courseAddTeacher");
 
-    List allCourse = this.db.getAllCourseInfo(0);
+    List<CourseInfo> allCourse = this.db.getAllCourseInfo(0);
     for (CourseInfo course : allCourse) {
       if (courseID.equals(course.getID())) {
         course.setProfessor(teacherID);

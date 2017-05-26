@@ -1,6 +1,5 @@
 package edu.thu.rlab.device;
 
-import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +21,7 @@ public class DeviceDAO extends TimerTask
   private int tcpPortBase;
   private long deviceHeartBeatPeriod;
   private long deleteOfflinePeriod;
-  private Map<String, Device> devicePool = new HashMap(0);
+  private Map<String, Device> devicePool = new HashMap<String, Device>(0);
   private byte[] lock = new byte[0];
   private Timer timer;
 
@@ -46,26 +45,25 @@ public class DeviceDAO extends TimerTask
         device.setLastHeartBeatTime(System.currentTimeMillis());
         device.timeoutCount = 0;
       }
-    }
+    } else {
     System.out.println(deviceId + " added");
-    device = new Device(deviceId, ip, tcpPort, usbPort, 
-      Device.STATE.AVAILABLE, this);
+    device = new Device(deviceId, ip, tcpPort, usbPort,Device.STATE.AVAILABLE, this);
     new Thread(device).start();
     synchronized (this.lock) {
-      System.out.println("DEBUG:Before put devicePool");
       System.out.printf("%s, %s, %d, %d\n", new Object[] { deviceId, ip, Integer.valueOf(tcpPort), Integer.valueOf(usbPort) });
       this.devicePool.put(deviceId, device);
       System.out.printf("devicePool.size = %d\n", new Object[] { Integer.valueOf(this.devicePool.size()) });
+    }
     }
   }
 
   public Device allocate(String userId)
   {
     Device device = null;
-    ArrayList allocatable = new ArrayList();
+    ArrayList<Device> allocatable = new ArrayList<Device>();
     synchronized (this.lock) {
-      Collection devices = this.devicePool.values();
-      Iterator it = devices.iterator();
+      Collection<Device> devices = this.devicePool.values();
+      Iterator<Device> it = devices.iterator();
 
       while (it.hasNext()) {
         device = (Device)it.next();
@@ -99,12 +97,13 @@ public class DeviceDAO extends TimerTask
   {
     synchronized (this.lock)
     {
+      Device device;
       long current = System.currentTimeMillis();
-      Collection devices = this.devicePool.values();
-      Iterator it = devices.iterator();
-      Set toDelete = new HashSet(0);
+      Collection<Device> devices = this.devicePool.values();
+      Iterator<Device> it = devices.iterator();
+      Set<String> toDelete = new HashSet<String>(0);
       while (it.hasNext()) {
-        Device device = (Device)it.next();
+        device = (Device)it.next();
 
         if (current - device.getLastHeartBeatTime() > this.deviceHeartBeatPeriod) {
           device.timeoutCount += 1;
@@ -116,10 +115,10 @@ public class DeviceDAO extends TimerTask
           }
         }
       }
-      it = toDelete.iterator();
-      while (it.hasNext()) {
-        String str = (String)it.next();
-        Device device = (Device)this.devicePool.remove(str);
+      Iterator<String> it2 = toDelete.iterator();
+      while (it2.hasNext()) {
+        String str = (String)it2.next();
+        device = (Device)this.devicePool.remove(str);
         device = null;
       }
     }
@@ -131,7 +130,7 @@ public class DeviceDAO extends TimerTask
     Date date = new Date();
     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
     synchronized (this.lock) {
-      Iterator it = this.devicePool.values().iterator();
+      Iterator<?> it = this.devicePool.values().iterator();
       while (it.hasNext()) {
         Device d = (Device)it.next();
         JSONObject dObj = new JSONObject();

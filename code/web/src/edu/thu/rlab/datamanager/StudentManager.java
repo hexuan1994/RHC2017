@@ -6,13 +6,19 @@ import edu.thu.rlab.database.RecordInfo;
 import edu.thu.rlab.database.UserInfo;
 import edu.thu.rlab.device.DeviceService;
 import edu.thu.rlab.servlet.ContextListener;
+import edu.thu.rlab.servlet.FileUploadServlet;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
+import java.util.Calendar;
 import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -32,7 +38,7 @@ public class StudentManager
     JSONObject json = new JSONObject();
     json.put("dataType", "studentGetCourse");
 
-    List allCourse = this.db.getCourseByStudentID(studentID);
+    List<CourseInfo> allCourse = this.db.getCourseByStudentID(studentID);
     JSONArray jsonArray = new JSONArray();
     for (CourseInfo course : allCourse) {
       JSONObject json2 = new JSONObject();
@@ -54,7 +60,7 @@ public class StudentManager
     json.put("dataType", "studentGetRecord");
 
     JSONArray jsonArray = new JSONArray();
-    List recordList = this.db.getRecords(courseID, expID, studentID);
+    List<RecordInfo> recordList = this.db.getRecords(courseID, expID, studentID);
     for (RecordInfo record : recordList) {
       JSONObject json2 = new JSONObject();
       json2.put("recordID", record.getRecordID());
@@ -134,6 +140,101 @@ public class StudentManager
     return json.toString();
   }
 
+  public String studentUploadbinEvent(String studentID, String courseID, int startAddr,  String  binPath)
+  {
+	    JSONObject json = new JSONObject();
+	    json.put("dataType", "studentUploadBin");
+	    json.put("result", "succeed");
+	    try
+	    {
+	      InputStream inputStream = new FileInputStream(binPath);
+	      int res = this.service.sendBin(studentID, startAddr,  inputStream);
+	      inputStream.close();
+	      if (res == 0) {
+	        String path = this.db.addRecords(courseID, "SRAM", studentID);
+
+	        InputStream inputStream2 = new FileInputStream(binPath);
+	        System.out.print(path);
+	        OutputStream outputStream = new FileOutputStream(path);
+	        byte[] buf = new byte[1024];
+	        int bytes = inputStream2.read(buf);
+	        while (bytes != -1) {
+	          outputStream.write(buf, 0, bytes);
+	          bytes = inputStream2.read(buf);
+	        }
+	        inputStream2.close();
+	        outputStream.close();
+	        json.put("result", "success");
+	      }
+	      else if ( res == 4 ){
+	    	  json.put("result", "fail");
+	    	  json.put("resultInfo", "please check the startAddr and file size.");
+	      }else{
+	        json.put("result", "fail");
+	        json.put("resultInfo", "sendBinFailed");
+	      }
+	    } catch (IOException e) {
+	      e.printStackTrace();
+	      json.put("result", "fail");
+	      json.put("resultInfo", "IOError");
+	    }
+
+	    return json.toString();  
+  }
+  
+  public String studentDownloadBinEvent(String studentID, String courseID, int startAddr, int endAddr){
+{
+		    JSONObject json = new JSONObject();
+		    json.put("dataType", "studentDownloadBin");
+		    json.put("result", "succeed");
+		        File curFile = new File(FileUploadServlet.class.getResource("/").getFile().toString());
+		        String filePath = (curFile.getParent() + File.separator + "download" + File.separator);
+		        File uploadDir = new File(filePath);
+		        System.out.println(uploadDir.getAbsolutePath());
+		        if ((!uploadDir.exists()) || (!uploadDir.isDirectory()))
+		          uploadDir.mkdir();
+		    	
+		        //格式化生成文件名
+		        Calendar now = Calendar.getInstance();
+		        String fileName = studentID +"_" +  courseID + "_" + startAddr + "_" + endAddr + "_" + now.getTimeInMillis() + ".bin";
+		        String curFileName = filePath + fileName;
+		    	File outputFile = new File(curFileName);
+		    	FileOutputStream fos = null;
+		    	BufferedOutputStream bos = null;
+		        
+		        //
+		        byte[] readData = null;
+		        byte[] data = null;
+		        readData = this.service.setSRAMInput(studentID, startAddr, endAddr, data); 
+		        
+		        //写入到文件
+		        try {  
+		            fos = new FileOutputStream(outputFile);
+		            bos = new BufferedOutputStream(fos);
+			        bos.write(readData);
+		        } catch (Exception e) {  
+		            e.printStackTrace();  
+		        }  finally {  
+		            if (bos != null) {  
+		                try {  
+		                    bos.close();  
+		                } catch (IOException e1) {  
+		                    e1.printStackTrace();  
+		                }  
+		            }  
+		            if (fos != null) {  
+		                try {  
+		                    fos.close();  
+		                } catch (IOException e1) {  
+		                    e1.printStackTrace();  
+		                }  
+		            }  
+		        }
+		    json.put("binPath",curFileName );
+		    return json.toString();  
+	  }
+  }
+  
   public String studentUploadInputEvent(String studentID, String expID, JSONArray input)
   {
     JSONObject json = new JSONObject();
@@ -170,7 +271,7 @@ public class StudentManager
         return null;
       }
       for (int i = 0; i < readData.length / 4; i++) {
-        System.out.printf("length = %d, i*4+3 = %d", new Object[] { Integer.valueOf(readData.length), Integer.valueOf(i * 4 + 3) });
+        
         res.append(Integer.toHexString(readData[(i * 4 + 3)] >> 4 & 0xF));
         res.append(Integer.toHexString(readData[(i * 4 + 3)] >> 0 & 0xF));
         res.append(Integer.toHexString(readData[(i * 4 + 2)] >> 4 & 0xF));
@@ -193,12 +294,9 @@ public class StudentManager
         int pos = i / 4 * 4 + (3 - i % 4);
         byte bt = (byte)(temp.indexOf(hexChars[(i * 2)]) << 4 | temp.indexOf(hexChars[(i * 2 + 1)]));
         writeData[pos] = bt;
-        System.out.printf("[%d]=%s", new Object[] { Integer.valueOf(pos), Integer.toHexString(bt) });
       }
       readData = this.service.setSRAMInput(studentID, startAddr, endAddr, writeData);
     }
-
-    System.out.printf("Read Finish, res= %s \n", new Object[] { res });
     if (res.length() != 0) {
       json.put("result", "succeed");
       json.put("outputData", res);
@@ -297,7 +395,7 @@ public class StudentManager
     json.put("dataType", "reloadRbf");
 
     String filepath = "fail";
-    List recordList = this.db.getRecords(courseID, expID, studentID);
+    List<RecordInfo> recordList = this.db.getRecords(courseID, expID, studentID);
     for (RecordInfo record : recordList) {
       if (recordID.equals(record.getRecordID())) {
         filepath = record.getPath();

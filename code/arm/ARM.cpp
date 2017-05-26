@@ -92,7 +92,7 @@ bool CheckHardware()
     char *buf = NULL;
 
     size_t len;
-/*
+
     // 下载控制FPGA
 
     bool b = GetFileContent("/home/plg/cfpga.rbf", buf, len);
@@ -118,7 +118,7 @@ bool CheckHardware()
         return false;
 
     // 测试
-*/
+
 
 // 寄存器测试暂时关闭
 
@@ -598,24 +598,24 @@ bool ReceiveSocketData(int sock, char *&pData, UINT32 len)
 	char *p = pData;
 
 	int recLen = 0;
-	cout << len << endl;
+	cout <<"ReceiveData: len = " <<  len << endl;
 
 	while (recLen < len)
 
 	{
 
-		int rlen = recv(sock, p, len, 0);
-		cout << rlen << endl;
-
+		int rlen = recv(sock, p, len, 0);      // MAX_SIZE = 1024
 		recLen += rlen;
-
 		p += rlen;
+        cout << "ReceiveData : rlen = " << rlen << " recLen = " << recLen << " p_size = " << (int)(p-pData)<< endl; 
 
 	}
+    cout <<"ReciveData: recLen = " << recLen << endl;
 
     if (recLen != len)
 
     {
+        cout << "ReceiveData : recLen = " << recLen << " len = " << len << endl;
 
         delete []pData;
 
@@ -624,7 +624,7 @@ bool ReceiveSocketData(int sock, char *&pData, UINT32 len)
         return false;
 
     }
-
+    cout << "ReceiveData : Successful!." << endl;
     return true;
 
 }
@@ -681,18 +681,19 @@ void* ProcessCommand(void *para)
             SendData(slaveSocket, RET_LOST_DATA);
         else
         {
-	    cout << "startAddr = " << hex << "0x" << startAddr << " endAddr = " << "0x" << endAddr << endl;
+	    cout << "num= " << num << " startAddr = " << hex << "0x" << startAddr << " endAddr = " << "0x" << endAddr << endl;
             SendData(slaveSocket, RET_OK);
 	
 	    //获取要写入的数据
             char *pData;
             if (!ReceiveSocketData(slaveSocket, pData, num))
             {
+                cout << "Write data : ReceiveSocketData failed" << endl;
                 SendData(slaveSocket, RET_LOST_DATA);
                 break;
             }
-
-            //检查参数
+        cout << "Write data : After ReceiveData" << endl;
+/*            //检查参数
             int len = num / 4;
             if (startAddr + len != endAddr + 1 || num % 4 != 0 ||
                 startAddr + len >= 0x100000)
@@ -702,8 +703,18 @@ void* ProcessCommand(void *para)
                 delete []pData;
                 break;
             }
-	    cout << "Read data : First Byte of 0x" << startAddr<<"="<< pData[0] << " ... Last Byte of 0x" << endAddr << "=" << pData[num-1]<<endl;
+*/            //w
+            int temp = num % 4;
+            int len = num / 4;
+            if(temp != 0){
+                int needToAdd = num - len * 4;
+                memset(pData + num,0,needToAdd);
+                len += 1;
+            }
 
+	    cout << "Write data : num = " << num << " size of Recive data=" << sizeof(pData) << endl;
+        cout << "Write data : First Byte of 0x" << hex << startAddr<<"="<< hex << (int)pData[0] << " ... Last Byte of 0x" << hex << endAddr << "=" << hex << (int)pData[num-1]<<endl;
+        
 	    //控制权交给CFPGA
             if (EnableSramAccess(CFPGA) < SUCCESS)
             {

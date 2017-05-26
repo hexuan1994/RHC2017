@@ -336,6 +336,7 @@ int main()
 	}
 //**************************************************写内存
 		cmd=cmd_mem_write;
+		c_mem_en();
 	if(strcmp(cmd,"mem_write")==0)
 	{
 		printf("3.写内存测试:");
@@ -388,12 +389,18 @@ int main()
 	}
 //**************************************************读内存
 		cmd=cmd_mem_read;
+		c_mem_en();
 	if (strcmp(cmd,"mem_read")==0)
 	{
 		printf("4.读内存测试:");
-	       	read_mem_data = mem_read(write_mem_addr);
-		printf("  mem_addr = %x",write_mem_addr);
-		printf("  读出数据 = %x\n",read_mem_data);
+	    
+		for(int i = 0;i < 12;i++){
+			read_mem_data = 0;
+			read_mem_data = mem_read(i);
+			printf(" 0x%x = %x\n",i,read_mem_data);
+		}
+//		printf("  mem_addr = %x",write_mem_addr);
+//		printf("  读出数据 = %x\n",read_mem_data);
 	//	printf("  Done!\n");
 	}
 	if (write_mem_data==read_mem_data)
@@ -406,6 +413,7 @@ int main()
 		printf("  (Error)内存读写测试错误!!\n");
 		
 	}
+/*	
 //**************************************************
 		cmd=cmd_c_mem_en;
 	if (strcmp(cmd,"c_mem_en")==0)
@@ -420,7 +428,7 @@ int main()
 		printf("8.e_mem_en OK!!\n");
 		e_mem_en();
 	}
-
+*/
 	i=0;
 	}
 //**************************************************EFPGA read LED

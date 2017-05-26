@@ -2,7 +2,6 @@ package edu.thu.rlab.servlet;
 
 import edu.thu.rlab.datamanager.DataManager;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -36,7 +35,7 @@ public class LoginServlet extends HttpServlet
     newJson.put("dataType", "login");
     newJson.put("username", username);
     newJson.put("password", password);
-
+    
     DataManager loginManager = new DataManager();
     String returnValue = loginManager.LoginEvent(newJson.toString());
 
@@ -64,6 +63,8 @@ public class LoginServlet extends HttpServlet
       response.addCookie(idCookie);
       response.addCookie(passCookie);
       response.addCookie(numberCookie);
+    } else {
+    	System.out.println("登陆失败，请检查用户名或密码是否正确");
     }
 
     out.print(returnValue);

@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.net.Socket;
 
 public class DeviceCmd
@@ -14,7 +13,6 @@ public class DeviceCmd
   private BufferedOutputStream out;
   private BufferedInputStream in;
   private TYPE type;
-  private static final int BufSize = 1024;
   private byte[] buf = new byte[1024];
 
   public DeviceCmd(Device device)
@@ -34,21 +32,18 @@ public class DeviceCmd
       write(startAdd);
       write(endAdd);
       flush();
-
+      
+      System.out.println("Hello: 1");
       int ret = read(this.buf, 0, 1);
       ret = this.buf[0];
       if (ret != 0) {
         return ret;
       }
-
+      
       while ((len = is.read(this.buf)) > 0)
         write(this.buf, 0, len);
       flush();
-
-      ret = read(this.buf, 0, 1);
-      ret = this.buf[0];
-      if (ret != 0)
-        return -1;
+      
     }
     catch (IOException e)
     {
@@ -64,7 +59,8 @@ public class DeviceCmd
     if (connect() < 0) {
       return null;
     }
-
+    byte[] ram;
+    
     try
     {
       write(TYPE.ReadRam.getCode());
@@ -79,13 +75,13 @@ public class DeviceCmd
         return null;
       }
 
-      byte[] ram = new byte[len];
+      ram = new byte[len];
       int offset = 0;
       int length;
       while ((offset < len) && (
         (length = read(this.buf, 0, 1024)) > 0))
       {
-        int length;
+        
         System.arraycopy(this.buf, 0, ram, offset, length);
         offset += length;
       }
@@ -103,10 +99,12 @@ public class DeviceCmd
       e.printStackTrace();
       return null;
     }
-    byte[] ram;
-    return ram;
+ 
+	return ram;
   }
 
+
+  
   public int writeRegs(int addr, int num)
   {
     if (connect() < 0)
@@ -210,6 +208,7 @@ public class DeviceCmd
   public byte getDBStatus() {
     if (connect() < 0)
       return -1;
+    byte db;
     try
     {
       write(TYPE.GetDBStatus.getCode());
@@ -226,11 +225,11 @@ public class DeviceCmd
     }
     catch (IOException e)
     {
-      byte db;
+     
       e.printStackTrace();
       return -1;
     }
-    byte db;
+    
     return db;
   }
 

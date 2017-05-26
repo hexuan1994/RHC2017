@@ -1,12 +1,11 @@
 package edu.thu.rlab.servlet;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import javax.servlet.http.Cookie;
 
 public class CookieData
 {
-  private static ArrayList<UserInfo> userInfoList = new ArrayList();
+  private static ArrayList<UserInfo> userInfoList = new ArrayList<UserInfo>();
 
   public static void addList(Cookie idCookie, Cookie passCookie, String curUserType) {
     UserInfo genUserInfo = new UserInfo(idCookie, passCookie, curUserType);
@@ -71,51 +70,45 @@ public class CookieData
 
   public static int getNumber(Cookie[] userCookie)
   {
-    String user_id = "";
-    int user_number = -1;
-    String user_pass = "";
-
-    if (userCookie != null) {
-      Cookie[] arrayOfCookie = userCookie; int j = userCookie.length; for (int i = 0; i < j; i++) { Cookie c = arrayOfCookie[i];
-        String str1;
-        switch ((str1 = c.getName()).hashCode()) { case -292412867:
-          if (str1.equals("user_number"));
-          break;
-        case -147132913:
-          if (str1.equals("user_id")) break; break;
-        case 339400709:
-          if (!str1.equals("user_pass")) { continue;
-
-            user_id = c.getValue();
-            continue;
-
-            user_number = Integer.parseInt(c.getValue());
-          } else
-          {
-            user_pass = c.getValue();
-          }
-          break;
-        }
-      }
-
-    }
-
-    if ((user_number < 0) || (user_id == "") || (user_pass == ""))
-    {
-      System.out.print("{result:failed-1}");
-      return -1;
-    }if (user_number >= getSize()) {
-      System.out.print("{result:failed-2, cookieSize : " + getSize() + "}");
-      return -1;
-    }if (!user_id.equals(getID(user_number))) {
-      System.out.print("{result:failed-3}");
-      return -1;
-    }if (!user_pass.equals(getPass(user_number))) {
-      System.out.println(user_number + " " + user_pass + " " + user_id);
-      System.out.print("{result:failed-4}");
-      return -1;
-    }
-
-    return user_number;
+		
+		String user_id = "";
+		int user_number = -1;
+		String user_pass = "";
+		
+		if(userCookie != null){
+			for(Cookie c : userCookie){
+				switch(c.getName()){
+				case("user_id"):
+					user_id = c.getValue();
+					break;
+				case("user_number"):
+					user_number = Integer.parseInt(c.getValue());
+					break;
+				case("user_pass"):
+					user_pass = c.getValue();
+					break;
+				}
+				System.out.println(c.getName() + c.getValue());
+			}
+		}
+		
+		System.out.println("all user number = " + CookieData.getSize());
+		if(user_number<0 || user_id=="" || user_pass==""){
+			// user_number 未设置
+			System.out.print("{result:failed-1}");
+			return -1;
+		} else if(user_number >= CookieData.getSize()) {
+			System.out.print("{result:failed-2, cookieSize : "+ CookieData.getSize()+"}");
+			return -1;
+		} else if(!user_id.equals(CookieData.getID(user_number))) {
+			System.out.print("{result:failed-3}");
+			return -1;
+		} else if(!user_pass.equals(CookieData.getPass(user_number))){
+			System.out.println(user_number + user_pass + user_id);
+			System.out.print("{result:failed-4}");
+			return -1;
+		}
+		
+		return user_number;
   }
 }

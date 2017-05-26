@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -48,7 +47,7 @@ public class ExcelReader
 
   public List<List<String>> readExcelSheet(int num)
   {
-    List content = new ArrayList();
+	  List<List<String>> content = new ArrayList<List<String>>();
 
     if (this.workBook == null) {
       return content;
@@ -61,10 +60,10 @@ public class ExcelReader
 
     for (int i = 1; i < rowNum; i++) {
       this.row = this.sheet.getRow(i);
-      List line = new ArrayList();
+      List<String> line = new ArrayList<String>();
       for (int j = 0; j < colNum; j++) {
         this.cell = this.row.getCell(j);
-        if (this.cell.getCellType() == 1) {
+        if (this.cell.getCellType() == cell.CELL_TYPE_STRING) {
           this.string = this.cell.getStringCellValue();
 
           if (this.string.equals("")) {

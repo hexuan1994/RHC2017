@@ -131,12 +131,10 @@ fclose(fp);
 	// 传输数据
 	for (UINT32 j = 0; j < len; ++j)
 	{
-		cout << "J = " << j << endl;
 		if ((j % 10000) == 0) cout << '.' << flush;
 		UINT16 wdata = buf[j];
 		for (int i = 0; i < 8; ++i)
 		{
-			cout << "["<< j << "|" << i << "]";
 			if ((j % 10000) == 0) cout << 'x' << flush;
 			// 从低位开始，在Data0上放置数据，设置DCLK="1"（上升沿触发传输），延时
 			if (!SetData0(fd_download, chip, wdata & 0x01) || !SetDclk(fd_download, chip, ONE) ||

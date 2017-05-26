@@ -1,8 +1,6 @@
 package edu.thu.rlab.database;
 
 import java.io.File;
-import java.io.PrintStream;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -109,7 +107,7 @@ public class DataBase
       System.out.println("Can not find the driver of Mysql!");
     }
 
-    String url = "jdbc:mysql://localhost:3307/mysql?useUnicode=true&characterEncoding=utf-8&useSSL=false";
+    String url = "jdbc:mysql://localhost:3306/mysql?useUnicode=true&characterEncoding=utf-8&useSSL=false";
     try
     {
       this.conn = DriverManager.getConnection(url, "root", "RHC2017");
@@ -132,9 +130,7 @@ public class DataBase
 
       File curFile = new File(DataBase.class.getResource("/").getFile().toString());
       this.filePath = (curFile.getParent() + "/records/");
-      System.out.println("before " + this.filePath);
       this.filePath = this.filePath.replaceAll("\\\\", "/");
-      System.out.println("after char " + this.filePath);
       File file = new File(this.filePath);
       file.mkdirs();
     }
@@ -274,7 +270,7 @@ public class DataBase
 
   public List<UserInfo> getAllUserInfo(int permission)
   {
-    List list = new ArrayList();
+    List<UserInfo> list = new ArrayList<UserInfo>();
     if (permission == 0) {
       try {
         String sql = "select * from users;";
@@ -352,7 +348,7 @@ public class DataBase
 
   public List<CourseInfo> getAllCourseInfo(int permission)
   {
-    List list = new ArrayList();
+    List<CourseInfo> list = new ArrayList<CourseInfo>();
     if (permission == 0) {
       try {
         String sql = "select * from courses;";
@@ -417,7 +413,7 @@ public class DataBase
 
   public List<RecordInfo> getRecords(String courseID, String labID, String studentID)
   {
-    List list = new ArrayList();
+    List<RecordInfo> list = new ArrayList<RecordInfo>();
     try {
       String sql = "select * from records where courseID = \"" + courseID + "\" and labID = \"" + labID + "\" and studentID = \"" + studentID + "\";";
       PreparedStatement pstmt = this.conn.prepareStatement(sql);
@@ -441,9 +437,9 @@ public class DataBase
 
   public List<CourseInfo> getCourseByStudentID(String studentID)
   {
-    List list = new ArrayList();
+    List<CourseInfo> list = new ArrayList<CourseInfo>();
     try {
-      List tempList = getAllCourseInfo(0);
+      List<CourseInfo> tempList = getAllCourseInfo(0);
       for (int i = 0; i < tempList.size(); i++) {
         CourseInfo courseInfo = (CourseInfo)tempList.get(i);
         String courseID = courseInfo.getID();
@@ -463,7 +459,7 @@ public class DataBase
 
   public List<CourseInfo> getCourseByProfessorID(String professorID)
   {
-    List list = new ArrayList();
+    List<CourseInfo> list = new ArrayList<CourseInfo>();
     try {
       String sql = "select * from courses where professor = \"" + professorID + "\";";
       PreparedStatement pstmt = this.conn.prepareStatement(sql);
@@ -486,7 +482,7 @@ public class DataBase
 
   public List<String> getStudentsInCourse(String courseID)
   {
-    List list = new ArrayList();
+    List<String> list = new ArrayList<String>();
     try {
       String sql = "select * from course_" + courseID + ";";
       PreparedStatement pstmt = this.conn.prepareStatement(sql);
