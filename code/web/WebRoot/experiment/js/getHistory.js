@@ -24,7 +24,6 @@ $(function () {
             var result_json = eval('(' + result + ')'); 
             var record_list = result_json.recordList;
             for (var i = 0; i < record_list.length; i++) {
-            	console.log(i);
                 $("#history").append(createHistoryTable(record_list[i].expTime, record_list[i].recordID, i+1));
             }
         }  

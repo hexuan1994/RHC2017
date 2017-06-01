@@ -54,8 +54,7 @@ public class DeviceServer extends Thread
         client = server.accept();
 
         clientIP = client.getInetAddress();
-        BufferedInputStream in = new BufferedInputStream(client
-          .getInputStream());
+        BufferedInputStream in = new BufferedInputStream(client .getInputStream());
         deviceCount = in.read(deviceBuffer);
 
         client.close();

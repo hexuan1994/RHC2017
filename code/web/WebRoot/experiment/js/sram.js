@@ -4,6 +4,11 @@
     	var startAddr = parseInt($("#sram-startaddr").val(),16);
     	var endAddr = parseInt($("#sram-endaddr").val(),16);
     	
+    	if( $("#sram-startaddr").val() == "" || $("#sram-endaddr").val() == "") {
+    		alert("请输入要读取的地址");
+    		return;
+    	}
+    	
     	//合法性检查
     	if( startAddr > 1048575 || endAddr > 1048575 || startAddr > endAddr){
     		alert("操作地址超过最大范围");
@@ -23,10 +28,14 @@
     			inputData : data
     		},
     		success : function(result){
-    			console.log(result);
-    			var jsResult = eval("(" + result + ")" );
-    			if (jsResult.result == "succeed") {
-    				document.getElementById("sram-data").value=jsResult.outputData;
+    			if( result == null ){
+    				alert("服务器无响应");
+    			} else {
+	    			console.log(result);
+	    			var jsResult = eval("(" + result + ")" );
+	    			if (jsResult.result == "succeed") {
+	    				document.getElementById("sram-data").value=jsResult.outputData;
+	    			}
     			}
     		}
     });
@@ -38,6 +47,11 @@
     	var startAddr = parseInt($("#sram-startaddr").val(),16);
     	var endAddr = parseInt($("#sram-endaddr").val(),16);
     	var originData = document.getElementById("sram-data").value;
+    	
+    	if( $("#sram-startaddr").val() == "" || $("#sram-endaddr").val() == "" || originData == "") {
+    		alert("请输入要读取的地址及数据");
+    		return;
+    	}
     	
     	//合法性检查
     	if( startAddr > 1048575 || endAddr > 1048575 || startAddr > endAddr){
@@ -65,7 +79,11 @@
     			inputData : data
     		},
     		success : function(result){
-    			console.log(result);
+    			if( result == null ){
+    				alert("服务器无响应");
+    			} else {
+    				console.log(result);
+    			}
     		},
     		error: function(result){
     			result = eval('(' + result + ')');

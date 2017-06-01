@@ -713,7 +713,7 @@ void* ProcessCommand(void *para)
             }
 
 	    cout << "Write data : num = " << num << " size of Recive data=" << sizeof(pData) << endl;
-        cout << "Write data : First Byte of 0x" << hex << startAddr<<"="<< hex << (int)pData[0] << " ... Last Byte of 0x" << hex << endAddr << "=" << hex << (int)pData[num-1]<<endl;
+        cout << "Write data : First Byte of 0x" << hex << startAddr<<"="<< hex << (int)pData[0] << " ... Last Byte of 0x" << hex << startAddr + len - 1 << "=" << hex << (int)pData[num-1]<<endl;
         
 	    //控制权交给CFPGA
             if (EnableSramAccess(CFPGA) < SUCCESS)
@@ -742,6 +742,7 @@ void* ProcessCommand(void *para)
         }
 	//关闭总线访问
 	UninitializeAhb();
+    cout << "WriteSram Finished." << endl;
         break;
     
     }
@@ -811,6 +812,7 @@ void* ProcessCommand(void *para)
         }
 	//关闭总线访问
 	UninitializeAhb();
+    cout << "ReadSram Finished." << endl;
         break;
 
     }

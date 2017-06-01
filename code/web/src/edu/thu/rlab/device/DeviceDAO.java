@@ -15,6 +15,7 @@ import java.util.TimerTask;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+//定时器，用以维护设备池
 public class DeviceDAO extends TimerTask
 {
   private Random random;

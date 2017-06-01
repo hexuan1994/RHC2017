@@ -415,7 +415,7 @@ public class DataBase
   {
     List<RecordInfo> list = new ArrayList<RecordInfo>();
     try {
-      String sql = "select * from records where courseID = \"" + courseID + "\" and labID = \"" + labID + "\" and studentID = \"" + studentID + "\";";
+      String sql = "select * from records where courseID = \"" + courseID + "\" and labID = \"" + labID + "\" and studentID = \"" + studentID + "\" order by recordID desc LIMIT 5;";
       PreparedStatement pstmt = this.conn.prepareStatement(sql);
       ResultSet rs = pstmt.executeQuery();
       while (rs.next()) {

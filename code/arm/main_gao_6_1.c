@@ -31,7 +31,7 @@ unsigned short ahb_read (unsigned int offset)
 		printf("read error!!\n");
 		return -1;
 	}
-	printf(" 读出总线值：%x\n",date);
+//	printf(" 读出总线值：%x\n",date);
 	close(fd);
 	return date;
 }
@@ -53,8 +53,8 @@ int ahb_write(unsigned int offset , unsigned short *date)
 		printf("write error !!\n");
 		return -1;
 	}
-	printf(" 写入总线地址：%x \n",offset);
-	printf(" 写入总线值：%x \n",*date);
+//	printf(" 写入总线地址：%x \n",offset);
+//	printf(" 写入总线值：%x \n",*date);
 	close(fd);
 	//printf("ok!\n");
 	return 0;
@@ -237,200 +237,221 @@ int main()
 	char cmd_c_mem_en[]="c_mem_en";
 	char cmd_e_mem_en[]="e_mem_en";
 
-	while(1)
-	{
-
-	fgets(s1,N,stdin);
-	if(s1[strlen(s1) -1 == '\n']){
-		s1[strlen(s1)] = '\0';
+	c_mem_en();
+	int j = 0,mi = 0;
+	for( j = 0;j < 12;j++){
+		unsigned int temp_addr = write_mem_addr + j;
+		mem_write(temp_addr,write_mem_data + j);
 	}
-	fflush(stdin);
-	/*printf("%s",s1);*/
-
-	p = strtok (s1,split);
-	while(p !=NULL){
-	printf("%s\n",p);
-	if(i==0)
-	{cmd = p;}
-	if (i==1)
-	{offset =strtoul(p,0,0);}
-	if (i==2)
-	{date = strtoul(p,0,0);}
-	p = strtok(NULL,split);
-	i++;
-	}
-/*****************add cmd *******************/
-	printf("*************\n");
-	printf("*Test Begin!*\n");
-	printf("*************\n");
-//**************************************************test access cfpga
-    		cmd=cmd_cfpga_read; //
-	if (strcmp(cmd,"cfpga_read")==0)//
-	{
-		printf("1.控制FPGA读测试:");
-		//***************************版本验证
-	        read_d = cfpga_read(Ver_Cfpga); 
-		printf("  read date = %x\n",read_d);
-
-		if (read_d==0x0472)
-		{
-			printf("  (Right)读控制FPGA正确！\n");
-			
-		}
-		else
-		{
-			printf("  (Error)读控制FPGA错误！\n");
-			
-		}
-	}
-//**************************************************写控制FPGA测试
-		sleep(1);
-		cmd=cmd_cfpga_write;
-	if(strcmp(cmd,"cfpga_write")==0)
-	{
-		cfpga_write_data=0x1234;			//写入读数值
-		printf("2.控制FPGA写测试：\n");
-		printf("写入到FPGA里到数据是：%x \n",cfpga_write_data);
-		ahb_date=LOW(cfpga_write_data);			//把写如数据放到AHB总线上
-		printf("写到总线上到数据是：%x \n",ahb_date);
-		cfpga_write(cfpga_reg,ahb_date);		//控制FPGA写函数
-		printf("写入到寄存器地址：%x \n",cfpga_reg);
-		sleep(1);
-		cfpga_write_data_back = cfpga_read(cfpga_reg);	//读出刚写入到寄存器中读数据
-		printf("读取寄存器 %x 的数值是：%x \n",cfpga_reg,cfpga_write_data_back);
-		if(cfpga_write_data_back==cfpga_write_data)	//与读取刚写入寄存器中读数据进行对比
-		{
-			printf("  (Right)写FPGA正确!\n");
-			
-		}
-		else
-		{
-			printf("  (Error)写FPGA错误!!\n");
-			
-		}
-//***************************************************************加法器测试
-/*		printf("  加法器测试：\n");
-		printf("  写入数据：%x\n",WREG_ADDER_DATA);
-		printf("  写入到寄存器：%x\n",WREG_FB);
-		ahb_date=LOW(WREG_ADDER_DATA);
-		printf("  写入总线完成!\n");
-		cfpga_write(WREG_FB,ahb_date);
-		printf("  写入控制FPGA完成!\n");
-		printf("  开始读取控制FPGA：\n");
-		sleep(1);
-		WREG_ADDER_RESULT = cfpga_read(0xFC);
-		printf("  读取控制FPGA结果：%x\n",WREG_ADDER_RESULT);*/
-//*******************************************************通过软件对数码管进行点亮测试
-		cfpga_write_data=0xAAAA;	//要写入的数据
-		ahb_date=LOW(cfpga_write_data);	//写到总线
-		cfpga_write(0x8,ahb_date);	//总线上到数据写到控制FPGA寄存器8中
-		sleep(1);
-		read_d = cfpga_read(REG_8);
-		printf(" REG8=%x\n",read_d);
-		read_d = cfpga_read(REG_9);
-		printf(" REG9=%x\n",read_d);
-		read_d = cfpga_read(REG_A);
-		printf(" REGA=%x\n",read_d);
-		read_d = cfpga_read(REG_B);
-		printf(" REGB=%x\n",read_d);
-	}
-//**************************************************写内存
-		cmd=cmd_mem_write;
-		c_mem_en();
-	if(strcmp(cmd,"mem_write")==0)
-	{
-		printf("3.写内存测试:");
-		mem_write(write_mem_addr,write_mem_data);
-		sleep(1);
-		printf("  mem_addr = %x",write_mem_addr);
-		printf("  写入数据 = %x\n",write_mem_data);
-	//	printf("  Done!\n");
-	}
-
-//**************************************************读实验FPGA测试
-		cmd=cmd_efpga_read;
-	if (strcmp(cmd,"efpga_read")==0)
-	{
-		printf("5.EFPGA读测试：");
-	        read_Efpga_ver = efpga_read(Ver_Efpga);
-		read_Efpga_VFD=	efpga_read(Efpga_reg_FD);//测试寄存器FD的值 0xffffffff
-		printf("  read date = %x\n",read_Efpga_ver);
-		
-	}
-	if(read_Efpga_ver==0x20150121) 
-	{
-	printf("  (Right)读EFPGA正确！\n");
-	}
-	else
-	{
-	printf("  (Error)读EFPGA错误！！\n");
-	}
-		printf("  实验FPGA寄存器FD的值 = %x\n",read_Efpga_VFD);
-//**************************************************写实验FPGA测试
-		cmd=cmd_efpga_write;
-	if(strcmp(cmd,"efpga_write")==0)
-	{
-		printf("6.EFPGA写测试：");
-		ahb_date=LOW(write_Efpga_data);
-		printf("  ahb_date=%x！",ahb_date);
-		efpga_write(Efpga_reg,ahb_date);
-		readback_Efpga_data=efpga_read(Efpga_reg);
-//		printf("  Efpga_reg_HERE=%x！\n",Efpga_reg);
-		printf("  readback=%x\n",readback_Efpga_data);
-		if (readback_Efpga_data==0x1234)
-		{
-		printf("  (Right)写EFPGA正确！\n");
-		}
-		else
-		{
-		printf("  (Error)写EFPGA错误！！\n");
-		}
-//		printf("ok!\n");
-	}
-//**************************************************读内存
-		cmd=cmd_mem_read;
-		c_mem_en();
-	if (strcmp(cmd,"mem_read")==0)
-	{
-		printf("4.读内存测试:");
-	    
-		for(int i = 0;i < 12;i++){
+	printf("wirteFinished!\n");
+	for(mi = 0;mi < 12;mi++){
 			read_mem_data = 0;
-			read_mem_data = mem_read(i);
-			printf(" 0x%x = %x\n",i,read_mem_data);
+			read_mem_data = mem_read(write_mem_addr + mi);
+			printf(" 0x%x = %x\n",write_mem_addr + mi,read_mem_data);
 		}
 //		printf("  mem_addr = %x",write_mem_addr);
 //		printf("  读出数据 = %x\n",read_mem_data);
-	//	printf("  Done!\n");
-	}
-	if (write_mem_data==read_mem_data)
-	{
-		printf("  (Right)内存读写测试正确!\n");
+
+//	while(1)
+// 	{
+
+// 	fgets(s1,N,stdin);
+// 	if(s1[strlen(s1) -1 == '\n']){
+// 		s1[strlen(s1)] = '\0';
+// 	}
+// 	fflush(stdin);
+// 	/*printf("%s",s1);*/
+
+// 	p = strtok (s1,split);
+// 	while(p !=NULL){
+// 	printf("%s\n",p);
+// 	if(i==0)
+// 	{cmd = p;}
+// 	if (i==1)
+// 	{offset =strtoul(p,0,0);}
+// 	if (i==2)
+// 	{date = strtoul(p,0,0);}
+// 	p = strtok(NULL,split);
+// 	i++;
+// 	}
+// /*****************add cmd *******************/
+// 	printf("*************\n");
+// 	printf("*Test Begin!*\n");
+// 	printf("*************\n");
+// //**************************************************test access cfpga
+//     		cmd=cmd_cfpga_read; //
+// 	if (strcmp(cmd,"cfpga_read")==0)//
+// 	{
+// 		printf("1.控制FPGA读测试:");
+// 		//***************************版本验证
+// 	        read_d = cfpga_read(Ver_Cfpga); 
+// 		printf("  read date = %x\n",read_d);
+
+// 		if (read_d==0x0472)
+// 		{
+// 			printf("  (Right)读控制FPGA正确！\n");
+			
+// 		}
+// 		else
+// 		{
+// 			printf("  (Error)读控制FPGA错误！\n");
+			
+// 		}
+// 	}
+// //**************************************************写控制FPGA测试
+// 		sleep(1);
+// 		cmd=cmd_cfpga_write;
+// 	if(strcmp(cmd,"cfpga_write")==0)
+// 	{
+// 		cfpga_write_data=0x1234;			//写入读数值
+// 		printf("2.控制FPGA写测试：\n");
+// 		printf("写入到FPGA里到数据是：%x \n",cfpga_write_data);
+// 		ahb_date=LOW(cfpga_write_data);			//把写如数据放到AHB总线上
+// 		printf("写到总线上到数据是：%x \n",ahb_date);
+// 		cfpga_write(cfpga_reg,ahb_date);		//控制FPGA写函数
+// 		printf("写入到寄存器地址：%x \n",cfpga_reg);
+// 		sleep(1);
+// 		cfpga_write_data_back = cfpga_read(cfpga_reg);	//读出刚写入到寄存器中读数据
+// 		printf("读取寄存器 %x 的数值是：%x \n",cfpga_reg,cfpga_write_data_back);
+// 		if(cfpga_write_data_back==cfpga_write_data)	//与读取刚写入寄存器中读数据进行对比
+// 		{
+// 			printf("  (Right)写FPGA正确!\n");
+			
+// 		}
+// 		else
+// 		{
+// 			printf("  (Error)写FPGA错误!!\n");
+			
+// 		}
+// //***************************************************************加法器测试
+// /*		printf("  加法器测试：\n");
+// 		printf("  写入数据：%x\n",WREG_ADDER_DATA);
+// 		printf("  写入到寄存器：%x\n",WREG_FB);
+// 		ahb_date=LOW(WREG_ADDER_DATA);
+// 		printf("  写入总线完成!\n");
+// 		cfpga_write(WREG_FB,ahb_date);
+// 		printf("  写入控制FPGA完成!\n");
+// 		printf("  开始读取控制FPGA：\n");
+// 		sleep(1);
+// 		WREG_ADDER_RESULT = cfpga_read(0xFC);
+// 		printf("  读取控制FPGA结果：%x\n",WREG_ADDER_RESULT);*/
+// //*******************************************************通过软件对数码管进行点亮测试
+// 		cfpga_write_data=0xAAAA;	//要写入的数据
+// 		ahb_date=LOW(cfpga_write_data);	//写到总线
+// 		cfpga_write(0x8,ahb_date);	//总线上到数据写到控制FPGA寄存器8中
+// 		sleep(1);
+// 		read_d = cfpga_read(REG_8);
+// 		printf(" REG8=%x\n",read_d);
+// 		read_d = cfpga_read(REG_9);
+// 		printf(" REG9=%x\n",read_d);
+// 		read_d = cfpga_read(REG_A);
+// 		printf(" REGA=%x\n",read_d);
+// 		read_d = cfpga_read(REG_B);
+// 		printf(" REGB=%x\n",read_d);
+// 	}
+// //**************************************************写内存
+// 		cmd=cmd_mem_write;
+// 		c_mem_en();
+// 	if(strcmp(cmd,"mem_write")==0)
+// 	{
+// 		printf("3.写内存测试:");
+// 		//mem_write(write_mem_addr,write_mem_data);
+// 		//sleep(1);
+// 		//printf("  mem_addr = %x",write_mem_addr);
+// 		//printf("  写入数据 = %x\n",write_mem_data);
+
+// 		for(int i = 0x100;i < 0x112;i++){
+// 			mem_write(i,0x1234abcd);
+// 			printf(" 0x%x = %x\n",i,0x1234abcd);
+// 		}
+
+// 	//	printf("  Done!\n");
+// 	}
+
+// //**************************************************读实验FPGA测试
+// 		cmd=cmd_efpga_read;
+// 	if (strcmp(cmd,"efpga_read")==0)
+// 	{
+// 		printf("5.EFPGA读测试：");
+// 	        read_Efpga_ver = efpga_read(Ver_Efpga);
+// 		read_Efpga_VFD=	efpga_read(Efpga_reg_FD);//测试寄存器FD的值 0xffffffff
+// 		printf("  read date = %x\n",read_Efpga_ver);
 		
-	}	
-	else
-	{
-		printf("  (Error)内存读写测试错误!!\n");
+// 	}
+// 	if(read_Efpga_ver==0x20150121) 
+// 	{
+// 	printf("  (Right)读EFPGA正确！\n");
+// 	}
+// 	else
+// 	{
+// 	printf("  (Error)读EFPGA错误！！\n");
+// 	}
+// 		printf("  实验FPGA寄存器FD的值 = %x\n",read_Efpga_VFD);
+// //**************************************************写实验FPGA测试
+// 		cmd=cmd_efpga_write;
+// 	if(strcmp(cmd,"efpga_write")==0)
+// 	{
+// 		printf("6.EFPGA写测试：");
+// 		ahb_date=LOW(write_Efpga_data);
+// 		printf("  ahb_date=%x！",ahb_date);
+// 		efpga_write(Efpga_reg,ahb_date);
+// 		readback_Efpga_data=efpga_read(Efpga_reg);
+// //		printf("  Efpga_reg_HERE=%x！\n",Efpga_reg);
+// 		printf("  readback=%x\n",readback_Efpga_data);
+// 		if (readback_Efpga_data==0x1234)
+// 		{
+// 		printf("  (Right)写EFPGA正确！\n");
+// 		}
+// 		else
+// 		{
+// 		printf("  (Error)写EFPGA错误！！\n");
+// 		}
+// //		printf("ok!\n");
+// 	}
+// //**************************************************读内存
+// 		cmd=cmd_mem_read;
+// 		c_mem_en();
+// 	if (strcmp(cmd,"mem_read")==0)
+// 	{
+// 		printf("4.读内存测试:");
+	    
+// 		for(int i = 0;i < 12;i++){
+// 			read_mem_data = 0;
+// 			read_mem_data = mem_read(i);
+// 			printf(" 0x%x = %x\n",i,read_mem_data);
+// 		}
+// //		printf("  mem_addr = %x",write_mem_addr);
+// //		printf("  读出数据 = %x\n",read_mem_data);
+// 	//	printf("  Done!\n");
+// 	}
+// /*	if (write_mem_data==read_mem_data)
+// 	{
+// 		printf("  (Right)内存读写测试正确!\n");
 		
-	}
-/*	
-//**************************************************
-		cmd=cmd_c_mem_en;
-	if (strcmp(cmd,"c_mem_en")==0)
-	{
-		printf("7.c_mem_en OK!!\n");
-		c_mem_en();
-	}
-//**************************************************
-		cmd=cmd_e_mem_en;
-	if(strcmp(cmd,"e_mem_en")==0)
-	{
-		printf("8.e_mem_en OK!!\n");
-		e_mem_en();
-	}
-*/
-	i=0;
-	}
+// 	}	
+// 	else
+// 	{
+// 		printf("  (Error)内存读写测试错误!!\n");
+		
+// 	}
+	
+// //**************************************************
+// 		cmd=cmd_c_mem_en;
+// 	if (strcmp(cmd,"c_mem_en")==0)
+// 	{
+// 		printf("7.c_mem_en OK!!\n");
+// 		c_mem_en();
+// 	}
+// //**************************************************
+// 		cmd=cmd_e_mem_en;
+// 	if(strcmp(cmd,"e_mem_en")==0)
+// 	{
+// 		printf("8.e_mem_en OK!!\n");
+// 		e_mem_en();
+// 	}
+// */
+// 	i=0;
+// 	}
 //**************************************************EFPGA read LED
 
 //***************************************************

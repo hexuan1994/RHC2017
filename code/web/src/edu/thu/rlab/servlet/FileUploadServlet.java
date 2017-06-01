@@ -1,15 +1,19 @@
 package edu.thu.rlab.servlet;
 
 import edu.thu.rlab.datamanager.DataManager;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -21,7 +25,7 @@ public class FileUploadServlet extends HttpServlet
   private String filePath;
   private int startAddr = 0;
   
-  public FileUploadServlet()
+  public FileUploadServlet() throws UnsupportedEncodingException
   {
     File curFile = new File(FileUploadServlet.class.getResource("/").getFile().toString());
     this.filePath = (curFile.getParent() + "/upload/");
@@ -89,9 +93,13 @@ public class FileUploadServlet extends HttpServlet
           out.close();
           return;
         }
+        int index=filename.lastIndexOf("\\");
+		if(index!=-1) {
+			    filename=filename.substring(index+1);
+		}
         System.out.println("FileName: " + filename);
 
-        String curFilePath = this.filePath + item.getName();
+        String curFilePath = this.filePath + filename;
         File uploadFile = new File(curFilePath);
         item.write(uploadFile);
     	 
